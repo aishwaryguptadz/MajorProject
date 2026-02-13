@@ -1,0 +1,59 @@
+# =========================
+# MOBILE (Android / Kotlin / Java)
+# =========================
+mobile/**/.gradle/
+mobile/**/build/
+mobile/**/local.properties
+mobile/**/.idea/
+mobile/**/*.iml
+
+# =========================
+# FRONTEND (React / Node / Vite)
+# =========================
+frontend/**/node_modules/
+frontend/**/dist/
+frontend/**/build/
+frontend/**/.env
+frontend/**/.next/
+frontend/**/coverage/
+
+# =========================
+# BACKEND (Spring Boot / Java)
+# =========================
+backend/**/target/
+backend/**/build/
+backend/**/.idea/
+backend/**/*.iml
+backend/**/.classpath
+backend/**/.project
+backend/**/.settings/
+
+# =========================
+# ML (Python / Data Science)
+# =========================
+ml/**/__pycache__/
+ml/**/*.pyc
+ml/**/.venv/
+ml/**/venv/
+ml/**/env/
+ml/**/.ipynb_checkpoints/
+
+# =========================
+# DATA (Usually Large / Sensitive)
+# =========================
+data/**
+
+# (Optional) Allow sample data only
+# !data/sample/
+# !data/README.md
+
+# =========================
+# DOCS (Usually Keep Everything)
+# =========================
+# (No ignore rules needed)
+
+# =========================
+# OS / SYSTEM JUNK
+# =========================
+.DS_Store
+Thumbs.db
