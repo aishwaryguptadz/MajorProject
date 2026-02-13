@@ -41,7 +41,8 @@ ml/**/.ipynb_checkpoints/
 # =========================
 # DATA (Usually Large / Sensitive)
 # =========================
-data/**
+data/*
+!data/.gitkeep
 
 # (Optional) Allow sample data only
 # !data/sample/
