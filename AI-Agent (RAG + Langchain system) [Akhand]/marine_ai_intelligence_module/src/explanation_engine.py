@@ -1,4 +1,4 @@
-from safe_utils import safe_value
+from .safe_utils import safe_value
 
 def generate_explanation(question,data):
 

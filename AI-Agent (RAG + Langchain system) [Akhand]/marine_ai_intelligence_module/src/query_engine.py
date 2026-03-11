@@ -1,7 +1,7 @@
 import pandas as pd
-from config import DATA_PATH
-from semantic_router import classify_question
-from safe_utils import safe_mean
+from .config import DATA_PATH
+from .semantic_router import classify_question
+from .safe_utils import safe_mean
 
 df = pd.read_csv(DATA_PATH)
 

@@ -1,6 +1,6 @@
 import joblib
 import pandas as pd
-from config import MODEL_PATH, FEATURES
+from .config import MODEL_PATH, FEATURES
 
 try:
     model = joblib.load(MODEL_PATH)

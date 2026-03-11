@@ -2,7 +2,7 @@ import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
 import joblib
-from config import DATA_PATH, FEATURES, TARGET, MODEL_PATH
+from .config import DATA_PATH, FEATURES, TARGET, MODEL_PATH
 
 df = pd.read_csv(DATA_PATH)
 
