@@ -7,6 +7,7 @@ import os
 import itertools
 import pandas as pd
 import numpy as np
+from math import radians, sin, cos, sqrt, atan2
 
 RAW_PATH = os.path.join(os.path.dirname(__file__), '..', 'data', 'raw', 'new_maritime_dataset.csv')
 
@@ -22,6 +23,20 @@ class RouteOptimizer:
     def __init__(self, data_path: str = RAW_PATH):
         self.df = pd.read_csv(data_path)
         self._build_port_graph()
+
+
+    def _haversine_nm(self, lat1, lon1, lat2, lon2):
+        R = 3440.065  # Earth radius in nautical miles
+
+        lat1, lon1, lat2, lon2 = map(radians, [lat1, lon1, lat2, lon2])
+
+        dlat = lat2 - lat1
+        dlon = lon2 - lon1
+
+        a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+        c = 2 * atan2(sqrt(a), sqrt(1-a))
+
+        return R * c
 
     # ── Port graph ───────────────────────────────────────────────────────
     def _build_port_graph(self):
@@ -74,8 +89,23 @@ class RouteOptimizer:
                 self.adjacency[o] = set()
             self.adjacency[o].add(d)
 
-        print(f"[RouteOptimizer] Built graph: {len(self.all_ports)} ports, "
+        '''print(f"[RouteOptimizer] Built graph: {len(self.all_ports)} ports, "
               f"{len(self.port_pairs)} unique port-pair routes")
+        
+        print("\nAdjacency example:")
+        for k in list(self.adjacency.keys())[:5]:
+            print(k, "→", self.adjacency[k])'''
+
+        possible_hubs = [
+            "Colombo",
+            "Singapore",
+            "Port Klang",
+            "Tanjung Pelepas",
+            "Jakarta"
+        ]
+
+        # keep only hubs that exist in dataset
+        self.major_hubs = [h for h in possible_hubs if h in self.all_ports]
 
     # ── Route aggregation ────────────────────────────────────────────────
     def _get_best_leg(self, origin: str, dest: str, ship_type: str = None,
@@ -120,32 +150,78 @@ class RouteOptimizer:
             'n_records': len(candidates),
         }
         return agg
+    
+    # -- Estimate a Missing leg ---------------------------------------------
+    def _estimate_leg(self, origin, destination):
+        """Estimate a route leg using geographic distance."""
+
+        if origin not in self.port_coords or destination not in self.port_coords:
+            return None
+
+        lat1, lon1 = self.port_coords[origin]
+        lat2, lon2 = self.port_coords[destination]
+
+        distance_nm = self._haversine_nm(lat1, lon1, lat2, lon2)
+
+        # simple fuel model (rough maritime estimate)
+        fuel_per_nm = 0.18
+        fuel = distance_nm * fuel_per_nm
+
+        days = distance_nm / 350  # ~14.5 knots typical tanker
+
+        risk = 0.5
+
+        return {
+            'origin': origin,
+            'destination': destination,
+            'route_type': 'estimated',
+            'distance_nm': distance_nm,
+            'fuel_total_t': fuel,
+            'fuel_cost_usd': fuel * 600,
+            'voyage_days': days,
+            'efficiency_score': 0.5,
+            'composite_risk': risk,
+            'storm_risk': 0,
+            'piracy_risk': 0,
+            'total_risk': risk,
+            'n_records': 0
+        }
 
     # ── Multi-hop path finding ───────────────────────────────────────────
     def _find_all_paths(self, origin: str, destination: str, max_hops: int = 3) -> list:
-        """Find all paths from origin to destination (BFS, max_hops intermediate stops)."""
-        paths = []
+        """Find all feasible paths using BFS traversal."""
+    
+        paths = set()
 
-        # Direct
+        # direct
         if destination in self.adjacency.get(origin, set()):
-            paths.append([origin, destination])
+            paths.add(tuple([origin, destination]))
+            
 
-        # Multi-hop via intermediate ports
-        if max_hops >= 1:
-            intermediates = self.all_ports - {origin, destination}
-            for n_stops in range(1, min(max_hops, 3) + 1):
-                for combo in itertools.permutations(intermediates, n_stops):
-                    path = [origin] + list(combo) + [destination]
-                    # Check all legs exist
-                    valid = True
-                    for i in range(len(path) - 1):
-                        if path[i + 1] not in self.adjacency.get(path[i], set()):
-                            valid = False
-                            break
-                    if valid:
-                        paths.append(path)
+        # hub routing
+        for hub in self.major_hubs:
+            if hub != origin and hub != destination:
+                paths.add(tuple([origin, hub, destination]))  
 
-        return paths
+        queue = [[origin]]
+
+        while queue:
+            path = queue.pop(0)
+            last = path[-1]
+
+            if len(path) > max_hops + 1:
+                continue
+
+            if last == destination and len(path) > 1:
+                paths.add(tuple(path))
+                continue
+
+            for next_port in self.adjacency.get(last, []):
+                if next_port not in path:  # avoid cycles
+                    new_path = path + [next_port]
+                    queue.append(new_path)
+
+        return [list(p) for p in paths]
 
     # ── Route evaluation ─────────────────────────────────────────────────
     def _evaluate_route(self, path: list, ship_type: str = None,
@@ -161,7 +237,9 @@ class RouteOptimizer:
         for i in range(len(path) - 1):
             leg = self._get_best_leg(path[i], path[i + 1], ship_type, route_type)
             if leg is None:
-                return None
+                leg = self._estimate_leg(path[i], path[i + 1])
+                if leg is None:
+                    return None
             legs.append(leg)
             total_fuel += leg['fuel_total_t']
             total_distance += leg['distance_nm']
@@ -255,7 +333,11 @@ class RouteOptimizer:
 
         # Find all feasible paths
         all_paths = self._find_all_paths(origin, destination, max_hops=2)
-        print(f"[RouteOptimizer] Found {len(all_paths)} feasible paths")
+        '''print(f"[RouteOptimizer] Found {len(all_paths)} feasible paths")
+
+        print("\n[RouteOptimizer] Paths discovered:")
+        for p in all_paths:
+            print(" → ".join(p))'''
 
         # Evaluate each path × each route type
         all_routes = []
@@ -269,7 +351,7 @@ class RouteOptimizer:
             if route:
                 all_routes.append(route)
 
-        print(f"[RouteOptimizer] Evaluated {len(all_routes)} route variants")
+        #print(f"[RouteOptimizer] Evaluated {len(all_routes)} route variants")
 
         if not all_routes:
             print("[RouteOptimizer] No feasible routes found!")
@@ -286,7 +368,27 @@ class RouteOptimizer:
 
         # Score and rank
         ranked = self._score_routes(unique_routes)
-        top_routes = ranked[:top_k]
+        # ensure at least one multi-hop route is shown
+        multi_hop = [r for r in ranked if r['n_legs'] > 1]
+        direct = [r for r in ranked if r['n_legs'] == 1]
+
+        top_routes = []
+
+        # always include best overall
+        if ranked:
+            top_routes.append(ranked[0])
+
+        # include best multi-hop if available
+        if multi_hop:
+            top_routes.append(multi_hop[0])
+
+        # fill remaining slots
+        for r in ranked:
+            if r not in top_routes:
+                top_routes.append(r)
+            if len(top_routes) >= top_k:
+                break
+
 
         # Print results
         for i, r in enumerate(top_routes):
@@ -331,9 +433,9 @@ def main():
     """Demo run of the route optimizer."""
     optimizer = RouteOptimizer()
 
-    ports = optimizer.get_available_ports()
+    '''ports = optimizer.get_available_ports()
     print(f"\nAvailable origin ports: {ports['origins']}")
-    print(f"Available destination ports: {ports['destinations']}")
+    print(f"Available destination ports: {ports['destinations']}")'''
 
     # Demo query
     routes = optimizer.find_best_routes(
