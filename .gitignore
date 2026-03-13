@@ -137,3 +137,9 @@ __MACOSX/
 *.tmp
 *.swp
 *.bak
+# Model files
+*.pkl
+*.joblib
+ml_model/models/
+models/
+outputs/
