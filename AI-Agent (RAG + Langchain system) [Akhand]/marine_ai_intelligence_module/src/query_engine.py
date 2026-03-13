@@ -7,24 +7,21 @@ df = pd.read_csv(DATA_PATH)
 
 def process_question(question):
 
-    topic=classify_question(question)
+    topic = classify_question(question)
 
-    if topic=="carbon":
-        return {"metric":"carbon","value":safe_mean(df,"co2_emitted_tonnes")}
+    result = {
 
-    if topic=="fuel":
-        return {"metric":"fuel","value":safe_mean(df,"fuel_consumption_t_day")}
+        "topic": topic,
 
-    if topic=="engine":
-        return {"metric":"engine","value":safe_mean(df,"engine_load_pct")}
+        "carbon_emission": safe_mean(df, "co2_emitted_tonnes"),
+        "fuel_consumption": safe_mean(df, "fuel_consumption_t_day"),
+        "engine_load": safe_mean(df, "engine_load_pct"),
+        "ship_speed": safe_mean(df, "avg_speed_knots"),
+        "wave_height": safe_mean(df, "wave_height_m"),
+        "wind_speed": safe_mean(df, "wind_speed_knots"),
+        "sea_temperature": safe_mean(df, "sea_temp_c"),
+        "efficiency_rate": safe_mean(df, "is_efficient")
 
-    if topic=="speed":
-        return {"metric":"speed","value":safe_mean(df,"avg_speed_knots")}
+    }
 
-    if topic=="weather":
-        return {"metric":"weather","value":safe_mean(df,"wave_height_m")}
-
-    if topic=="efficiency":
-        return {"metric":"efficiency","value":safe_mean(df,"is_efficient")}
-
-    return {"metric":"unknown","value":None}
+    return result

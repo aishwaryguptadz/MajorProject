@@ -2,16 +2,39 @@ from .safe_utils import safe_value
 
 def generate_explanation(question,data):
 
-    metric=data["metric"]
-    value=safe_value(data["value"])
+    carbon = safe_value(data["carbon_emission"])
+    fuel = safe_value(data["fuel_consumption"])
+    engine = safe_value(data["engine_load"])
+    speed = safe_value(data["ship_speed"])
+    wind = safe_value(data["wind_speed"])
+    wave = safe_value(data["wave_height"])
+    temp = safe_value(data["sea_temperature"])
+    efficiency = safe_value(data["efficiency_rate"])
 
-    explanations={
-    "carbon":f"Average CO2 emission is {value} tonnes caused mainly by fuel usage and engine load.",
-    "fuel":f"Average fuel consumption is {value} tons per day.",
-    "engine":f"Engine load averages {value}%.",
-    "speed":f"Ship speed averages {value} knots.",
-    "weather":f"Wave height averages {value} meters affecting propulsion resistance.",
-    "efficiency":f"{safe_value(data['value']*100)}% of operations are efficient."
-    }
+    explanation = f"""
+Ship Intelligence Report
 
-    return explanations.get(metric,"The system could not interpret the question.")
+Average CO2 Emission: {carbon} tonnes
+Average Fuel Consumption: {fuel} tons/day
+Average Engine Load: {engine} %
+Average Ship Speed: {speed} knots
+Average Wind Speed: {wind} knots
+Average Wave Height: {wave} meters
+Average Sea Temperature: {temp} °C
+Efficiency Rate: {efficiency}
+
+Possible Reasons Affecting Ship Performance:
+"""
+
+    if engine != "Data not available" and engine > 75:
+        explanation += "\n• High engine load increased fuel consumption."
+
+    if wind != "Data not available" and wind > 15:
+        explanation += "\n• Strong wind speed increased aerodynamic resistance."
+
+    if wave != "Data not available" and wave > 2:
+        explanation += "\n• High wave height increased propulsion resistance."
+
+    explanation += "\n\nThese factors collectively influence vessel efficiency."
+
+    return explanation

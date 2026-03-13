@@ -15,6 +15,6 @@ def safe_value(value):
         return "Data not available"
 
     try:
-        return round(value,2)
+        return round(value, 2)
     except:
         return value

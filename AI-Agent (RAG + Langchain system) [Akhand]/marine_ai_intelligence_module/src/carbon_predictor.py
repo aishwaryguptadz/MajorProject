@@ -14,12 +14,8 @@ def predict_emission(data):
         return None
 
     try:
-
         df = pd.DataFrame([data])
-
         prediction = model.predict(df[FEATURES])[0]
-
         return prediction
-
     except:
         return None
