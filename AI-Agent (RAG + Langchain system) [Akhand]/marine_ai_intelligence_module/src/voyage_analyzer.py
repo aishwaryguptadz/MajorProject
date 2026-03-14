@@ -5,17 +5,23 @@ df = pd.read_csv(DATA_PATH)
 
 def analyze_voyage():
 
-    wind = df["wind_speed_knots"].mean()
     wave = df["wave_height_m"].mean()
 
-    if wave > 2:
-        sea_state = "Rough Sea"
-    elif wave > 1:
-        sea_state = "Moderate Sea"
+    wind = df["wind_speed_knots"].mean()
+
+    if wave>2:
+        sea="Rough Sea"
+
+    elif wave>1:
+        sea="Moderate Sea"
+
     else:
-        sea_state = "Calm Sea"
+        sea="Calm Sea"
 
     return {
-        "sea_state": sea_state,
-        "wind_speed": wind
+
+    "sea_state":sea,
+
+    "wind_speed":wind
+
     }

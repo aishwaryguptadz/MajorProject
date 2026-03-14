@@ -5,19 +5,18 @@ df = pd.read_csv(DATA_PATH)
 
 def detect_anomalies():
 
-    anomalies = []
+    anomalies=[]
 
-    avg_engine = df["engine_load_pct"].mean()
-    avg_wave = df["wave_height_m"].mean()
-    avg_fuel = df["fuel_consumption_t_day"].mean()
+    if df["engine_load_pct"].mean()>80:
+        anomalies.append("High engine load anomaly")
 
-    if avg_engine > 80:
-        anomalies.append("High engine load anomaly detected")
-
-    if avg_wave > 2:
-        anomalies.append("Rough sea condition anomaly")
-
-    if avg_fuel > 55:
+    if df["fuel_consumption_t_day"].mean()>55:
         anomalies.append("Fuel consumption anomaly")
+
+    if df["wave_height_m"].mean()>2:
+        anomalies.append("Rough sea condition")
+
+    if len(anomalies)==0:
+        anomalies.append("No anomalies detected")
 
     return anomalies

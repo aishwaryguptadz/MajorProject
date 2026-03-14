@@ -1,45 +1,47 @@
 from .query_engine import process_question
-from .explanation_engine import generate_explanation
 from .anomaly_detector import detect_anomalies
 from .voyage_analyzer import analyze_voyage
 from .root_cause_analyzer import analyze_root_cause
+from .correlation_analyzer import analyze_correlations
+from .explanation_engine import generate_explanation
+from .memory_manager import save_message
 
 def answer_question(question):
 
-    try:
+    data = process_question(question)
 
-        data = process_question(question)
+    tags = data["tags"]
 
-        explanation = generate_explanation(question,data)
+    anomalies = detect_anomalies()
 
-        anomalies = detect_anomalies()
+    voyage = analyze_voyage()
 
-        voyage = analyze_voyage()
+    causes = analyze_root_cause(tags)
 
-        causes = analyze_root_cause()
+    correlations = analyze_correlations()
 
-        return {
+    report = generate_explanation(question,data)
 
-        "question": question,
+    response = {
 
-        "analysis": data,
+    "question":question,
 
-        "voyage_condition": voyage,
+    "detected_topics":tags,
 
-        "anomalies": anomalies,
+    "analysis":data,
 
-        "root_causes": causes,
+    "voyage_condition":voyage,
 
-        "report": explanation
+    "anomalies":anomalies,
 
-        }
+    "root_causes":causes,
 
-    except Exception:
+    "correlations":correlations,
 
-        return {
+    "report":report
 
-        "question": question,
+    }
 
-        "error": "System could not process request"
+    save_message(question,response)
 
-        }
+    return response
