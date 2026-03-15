@@ -1,24 +1,17 @@
 import pandas as pd
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
 import joblib
-from .config import DATA_PATH, FEATURES, TARGET, MODEL_PATH
+from .config import DATA_PATH, MODEL_PATH
 
 df = pd.read_csv(DATA_PATH)
 
-df = df.dropna(subset=FEATURES + [TARGET])
+X = df[["fuel_consumption_t_day","engine_load_pct","avg_speed_knots"]]
+y = df["co2_emitted_tonnes"]
 
-X = df[FEATURES]
-y = df[TARGET]
+model = LinearRegression()
 
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42
-)
+model.fit(X,y)
 
-model = RandomForestRegressor()
+joblib.dump(model,MODEL_PATH)
 
-model.fit(X_train, y_train)
-
-joblib.dump(model, MODEL_PATH)
-
-print("Carbon emission model trained and saved.")
+print("Carbon model trained")

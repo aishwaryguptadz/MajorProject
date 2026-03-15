@@ -3,16 +3,22 @@ from .config import DATA_PATH
 
 df = pd.read_csv(DATA_PATH)
 
-def analyze_correlations():
 
-    corr = df.corr(numeric_only=True)
+def compute_correlations():
 
-    results=[]
+    if "fuel_consumption_t_day" not in df.columns:
+        return {"error": "fuel_consumption_t_day column not found in dataset"}
 
-    if corr["fuel_consumption_t_day"]["engine_load_pct"]>0.5:
-        results.append("Fuel consumption strongly correlates with engine load")
+    # Compute correlation matrix
+    corr_matrix = df.corr(numeric_only=True)
 
-    if corr["co2_emitted_tonnes"]["fuel_consumption_t_day"]>0.7:
-        results.append("Carbon emissions increase with fuel consumption")
+    # Extract correlations with fuel consumption
+    fuel_corr = corr_matrix["fuel_consumption_t_day"].drop("fuel_consumption_t_day")
 
-    return results
+    # Remove weak correlations
+    fuel_corr = fuel_corr[abs(fuel_corr) > 0.2]
+
+    # Sort by strongest relationship
+    fuel_corr = fuel_corr.sort_values(ascending=False)
+
+    return fuel_corr.to_dict()

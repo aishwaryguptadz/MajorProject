@@ -1,39 +1,84 @@
-import re
+def detect_intent(question):
 
-KEYWORD_TAGS = {
+    q = question.lower()
 
-"carbon":["carbon","co2","emission"],
+    prediction_keywords = [
+        "predict",
+        "forecast",
+        "future",
+        "tomorrow",
+        "increase",
+        "decrease",
+        "trend",
+        "prediction"
+    ]
 
-"fuel":["fuel","consumption"],
+    maintenance_keywords = [
+        "repair",
+        "maintenance",
+        "inspect",
+        "inspection",
+        "service",
+        "fix",
+        "engine issue",
+        "engine problem",
+        "cooling system"
+    ]
 
-"engine":["engine","engine load"],
+    navigation_keywords = [
+        "route",
+        "navigation",
+        "path",
+        "voyage route",
+        "safer navigation"
+    ]
 
-"weather":["wind","wave","storm","sea"],
+    operation_keywords = [
+        "speed",
+        "cruising speed",
+        "operational speed"
+    ]
 
-"speed":["speed","velocity"],
+    regulation_keywords = [
+        "imo",
+        "marpol",
+        "regulation",
+        "cii",
+        "eexi",
+        "nox",
+        "sox",
+        "sulphur",
+        "carbon intensity"
+    ]
 
-"temperature":["temperature"],
+    analysis_keywords = [
+        "analyze",
+        "analysis",
+        "report",
+        "performance",
+        "why",
+        "cause",
+        "efficiency",
+        "anomaly",
+        "operational data"
+    ]
 
-"efficiency":["efficiency","performance"]
+    if any(word in q for word in prediction_keywords):
+        return "prediction"
 
-}
+    if any(word in q for word in maintenance_keywords):
+        return "maintenance"
 
-def extract_tags(question):
+    if any(word in q for word in navigation_keywords):
+        return "navigation"
 
-    question = question.lower()
+    if any(word in q for word in operation_keywords):
+        return "operation"
 
-    tokens = re.findall(r'\w+',question)
+    if any(word in q for word in regulation_keywords):
+        return "knowledge"
 
-    detected_tags = set()
+    if any(word in q for word in analysis_keywords):
+        return "analysis"
 
-    for tag,words in KEYWORD_TAGS.items():
-
-        for token in tokens:
-
-            if token in words:
-                detected_tags.add(tag)
-
-    if len(detected_tags)==0:
-        detected_tags.add("general")
-
-    return list(detected_tags)
+    return "analysis"

@@ -1,16 +1,31 @@
-conversation_memory=[]
+from datetime import datetime
 
-def save_message(question,response):
+conversation_history = []
+MAX_HISTORY = 50
 
-    conversation_memory.append({
 
-    "question":question,
+def store_message(role, message):
+    """
+    role: 'user' or 'assistant'
+    message: text message
+    """
 
-    "response":response
+    entry = {
+        "role": role,
+        "message": message,
+        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    }
 
-    })
+    conversation_history.append(entry)
+
+    # Keep only last N messages
+    if len(conversation_history) > MAX_HISTORY:
+        conversation_history.pop(0)
 
 
 def get_history():
+    return conversation_history.copy()
 
-    return conversation_memory
+
+def clear_history():
+    conversation_history.clear()

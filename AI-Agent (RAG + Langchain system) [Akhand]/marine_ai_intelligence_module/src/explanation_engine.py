@@ -1,22 +1,20 @@
-def generate_explanation(question,data):
+def generate_report(data, causes, anomalies):
 
-    report=f"""
-Ship Intelligence Report
+    report = "Ship Intelligence Report\n\n"
 
-Carbon Emission: {data["carbon_emission"]}
+    report += "Operational Metrics:\n"
 
-Fuel Consumption: {data["fuel_consumption"]}
+    for k,v in data.items():
+        report += f"{k}: {v}\n"
 
-Engine Load: {data["engine_load"]}
+    report += "\nDetected Anomalies:\n"
 
-Ship Speed: {data["ship_speed"]}
+    for a in anomalies:
+        report += f"- {a}\n"
 
-Wind Speed: {data["wind_speed"]}
+    report += "\nPossible Root Causes:\n"
 
-Wave Height: {data["wave_height"]}
-
-Sea Temperature: {data["sea_temperature"]}
-
-"""
+    for c in causes:
+        report += f"- {c}\n"
 
     return report

@@ -1,47 +1,79 @@
-from .query_engine import process_question
+from .router import detect_intent
+from .query_engine import analyze_dataset
+from .prediction_engine import predict_trends
+from .maintenance_engine import maintenance_advice
+from .navigation_engine import optimal_route
+from .operational_engine import recommended_speed
+from .rag_engine import search_regulation
+
 from .anomaly_detector import detect_anomalies
-from .voyage_analyzer import analyze_voyage
 from .root_cause_analyzer import analyze_root_cause
-from .correlation_analyzer import analyze_correlations
-from .explanation_engine import generate_explanation
-from .memory_manager import save_message
+from .explanation_engine import generate_report
+
+from .semantic_engine import detect_metric
+
 
 def answer_question(question):
 
-    data = process_question(question)
+    try:
 
-    tags = data["tags"]
+        intent = detect_intent(question)
 
-    anomalies = detect_anomalies()
+        if intent == "prediction":
 
-    voyage = analyze_voyage()
+            predictions = predict_trends()
 
-    causes = analyze_root_cause(tags)
+            metric = detect_metric(question)
 
-    correlations = analyze_correlations()
+            result = predictions.get(metric)
 
-    report = generate_explanation(question,data)
+            if not result:
+                return {"message":"Prediction unavailable"}
 
-    response = {
+            answer = (
+                f"Yes, {metric.replace('_',' ')} is likely to increase."
+                if result["trend"]=="increase"
+                else f"No, {metric.replace('_',' ')} is likely to decrease."
+            )
 
-    "question":question,
+            return {
+                "intent":"prediction",
+                "metric":metric,
+                "current_average":result["current_average"],
+                "predicted_value":result["predicted_value"],
+                "trend":result["trend"],
+                "answer":answer
+            }
 
-    "detected_topics":tags,
+        if intent=="maintenance":
+            return {"intent":"maintenance","maintenance_advice":maintenance_advice()}
 
-    "analysis":data,
+        if intent=="navigation":
+            return {"intent":"navigation","route_recommendation":optimal_route()}
 
-    "voyage_condition":voyage,
+        if intent=="operation":
+            return {"intent":"operation","recommended_speed":recommended_speed()}
 
-    "anomalies":anomalies,
+        if intent=="knowledge":
+            return {"intent":"knowledge","imo_regulation":search_regulation(question)}
 
-    "root_causes":causes,
+        data = analyze_dataset()
+        anomalies = detect_anomalies()
+        causes = analyze_root_cause()
 
-    "correlations":correlations,
+        report = generate_report(data,causes,anomalies)
 
-    "report":report
+        return {
+            "intent":"analysis",
+            "analysis":data,
+            "anomalies":anomalies,
+            "root_causes":causes,
+            "report":report
+        }
 
-    }
+    except Exception as e:
 
-    save_message(question,response)
-
-    return response
+        return {
+            "error":"AI processing failed",
+            "details":str(e)
+        }

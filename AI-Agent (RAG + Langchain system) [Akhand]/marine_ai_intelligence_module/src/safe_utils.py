@@ -1,9 +1,5 @@
-def safe_mean(df,column):
-
-    if column not in df.columns:
-        return None
-
+def safe_mean(series):
     try:
-        return df[column].mean()
+        return float(series.mean())
     except:
         return None
