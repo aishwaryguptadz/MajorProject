@@ -93,7 +93,7 @@ def fuel_prediction():
 
     return {
         "currentRPM": r.currentRPM,
-        "recommendedRPM": r.recommendedRPM,
+        "recommendedRPM": r.currentRPM + r.recommendedRPM,
         "estimatedSaving": r.estimatedSaving,
         "confidence": r.confidence
     }
@@ -113,7 +113,7 @@ def safety_prediction():
     r = cursor.fetchone()
     conn.close()
     if r is None:
-        return {"message": "No fuel prediction found"}
+        return {"message": ""}
 
     return {
         "riskScore": r.riskScore,
