@@ -3,8 +3,10 @@ import os
 import sys
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 
 app = FastAPI()
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -13,7 +15,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Add ml_model/src to Python path
+# ---------------- PATH SETUP ----------------
 current_dir = os.path.dirname(__file__)
 project_root = os.path.abspath(os.path.join(current_dir, ".."))
 
@@ -24,28 +26,24 @@ from predict import MaritimePredictor
 
 predictor = MaritimePredictor()
 
-
+# ---------------- ROUTE API ----------------
 @app.post("/route")
 def get_routes(origin: str, destination: str, ship_type: str = None):
-
     routes = predictor.recommend_routes(
         origin=origin,
         destination=destination,
         ship_type=ship_type,
         top_k=3
     )
-
     return {"routes": routes}
-
 
 @app.get("/ports")
 def get_ports():
-    ports = predictor.get_ports()
-    return ports
+    return predictor.get_ports()
 
+# ---------------- METRICS ----------------
 @app.get("/vessel/metrics")
 def get_vessel_metrics():
-
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -59,9 +57,8 @@ def get_vessel_metrics():
     rows = cursor.fetchall()
     conn.close()
 
-    result = []
-    for r in rows:
-        result.append({
+    return [
+        {
             "engineTemp": r.engineTemp,
             "rpm": r.rpm,
             "fuelRate": r.fuelRate,
@@ -69,38 +66,45 @@ def get_vessel_metrics():
             "vibration": r.vibration,
             "loadWeight": r.loadWeight,
             "timestamp": r.timestamp
-        })
+        }
+        for r in rows
+    ]
 
-    return result
-
+# ---------------- FUEL PREDICTION ----------------
 @app.get("/prediction/fuel")
 def fuel_prediction():
-
     conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT TOP 1 currentRPM, recommendedRPM,
-               estimatedSaving, confidence
-        FROM fuel_predictions
-        ORDER BY created_at DESC
+        SELECT TOP 1 rpm, engineTemp, speed, loadWeight
+        FROM vessel_metrics
+        ORDER BY timestamp DESC
     """)
 
-    r = cursor.fetchone()
+    row = cursor.fetchone()
     conn.close()
-    if r is None:
-        return {"message": "No fuel prediction found"}
 
-    return {
-        "currentRPM": r.currentRPM,
-        "recommendedRPM": r.currentRPM + r.recommendedRPM,
-        "estimatedSaving": r.estimatedSaving,
-        "confidence": r.confidence
+    if not row:
+        return {"message": "No data found"}
+
+    data = {
+        "rpm": row.rpm,
+        "engineTemp": row.engineTemp,
+        "speed": row.speed,
+        "loadWeight": row.loadWeight
     }
 
+    result = predictor.predict_fuel(data)
+
+    return {
+        "input": data,
+        "prediction": result
+    }
+
+# ---------------- SAFETY ----------------
 @app.get("/prediction/safety")
 def safety_prediction():
-
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -112,8 +116,9 @@ def safety_prediction():
 
     r = cursor.fetchone()
     conn.close()
+
     if r is None:
-        return {"message": ""}
+        return {"message": "No data"}
 
     return {
         "riskScore": r.riskScore,
@@ -121,9 +126,41 @@ def safety_prediction():
         "possibleCause": r.possibleCause
     }
 
+# ---------------- HEALTH (YOUR MODEL) ----------------
+@app.get("/prediction/health")
+def get_health():
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT TOP 1 engineTemp, rpm, vibration, loadWeight
+        FROM vessel_metrics
+        ORDER BY timestamp DESC
+    """)
+
+    row = cursor.fetchone()
+    conn.close()
+
+    if not row:
+        return {"message": "No data"}
+
+    data = {
+        "engineTemp": row.engineTemp,
+        "rpm": row.rpm,
+        "vibration": row.vibration,
+        "loadWeight": row.loadWeight
+    }
+
+    health_index = predictor.predict_health(data)
+
+    return {
+        "sensor_data": data,
+        "health_index": float(health_index)
+    }
+
+# ---------------- ALERTS ----------------
 @app.get("/alerts")
 def get_alerts():
-
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -136,20 +173,19 @@ def get_alerts():
     rows = cursor.fetchall()
     conn.close()
 
-    alerts = []
-    for r in rows:
-        alerts.append({
+    return [
+        {
             "alertId": r.alert_id,
             "severity": r.severity,
             "message": r.message,
             "time": r.time
-        })
+        }
+        for r in rows
+    ]
 
-    return alerts
-
+# ---------------- LOGS ----------------
 @app.get("/logs")
 def get_logs():
-
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -162,20 +198,18 @@ def get_logs():
     rows = cursor.fetchall()
     conn.close()
 
-    logs = []
-    
-    for r in rows:
-        logs.append({
+    return [
+        {
             "event": r.event,
             "level": r.level,
             "time": r.time
-        })
+        }
+        for r in rows
+    ]
 
-    return logs
-
+# ---------------- STATUS ----------------
 @app.get("/vessel/status")
 def vessel_status():
-
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -186,25 +220,23 @@ def vessel_status():
 
     r = cursor.fetchone()
     conn.close()
+
     if r is None:
-        return {"message": "No fuel prediction found"}
+        return {"message": "No status"}
 
     return {
         "systemHealth": r.systemHealth,
         "connectivity": r.connectivity
     }
 
-from pydantic import BaseModel
-
+# ---------------- SETTINGS ----------------
 class SettingsUpdate(BaseModel):
     refreshInterval: int
     aiMode: str
     apiEndpoint: str
 
-
 @app.post("/settings/update")
 def update_settings(data: SettingsUpdate):
-
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -217,3 +249,36 @@ def update_settings(data: SettingsUpdate):
     conn.close()
 
     return {"message": "Settings updated successfully"}
+
+ai_path = os.path.join(project_root, "AI-Agent (RAG + Langchain system) [Akhand]","marine_ai_intelligence_module")
+sys.path.append(ai_path)
+
+from src.query_engine import analyze_dataset
+class Query(BaseModel):
+    question: str
+    
+@app.post("/ask")
+def ask_question(data: Query):
+
+    analysis = analyze_dataset()
+    question = data.question.lower()
+
+    root_causes = []
+    
+    if "fuel" in question:
+        root_causes.append("Fuel consumption depends on engine load and speed")
+    if "sea" in question or "wave" in question:
+        root_causes.append("Rough sea increases propulsion demand")
+    if "engine" in question:
+        root_causes.append("High engine load increases fuel usage")
+
+    return {
+        "question": data.question,
+        "analysis": analysis,
+        "root_causes": root_causes if root_causes else ["General system behavior"],
+        "correlations": [
+            "Fuel consumption ↔ Engine load",
+            "Carbon emission ↔ Fuel consumption"
+        ],
+        "report": "AI-generated maritime insight based on dataset trends"
+    }
