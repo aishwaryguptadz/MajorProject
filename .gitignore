@@ -32,6 +32,7 @@ venv/
 env/
 ENV/
 .venv/
+marine_env/
 
 # Jupyter
 .ipynb_checkpoints/
@@ -44,7 +45,6 @@ ENV/
 *.ckpt
 *.tflite
 *.joblib
-*.pkl
 
 # Dataset Files (Raw)
 data/raw/
@@ -137,3 +137,9 @@ __MACOSX/
 *.tmp
 *.swp
 *.bak
+# Model files
+*.pkl
+*.joblib
+ml_model/models/
+models/
+outputs/
