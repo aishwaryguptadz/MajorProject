@@ -3,8 +3,8 @@ import pyodbc
 def get_connection():
     conn = pyodbc.connect(
         "DRIVER={SQL Server};"
-        "SERVER=ANUSH\SQLEXPRESS;"
-        "DATABASE=MarineAI;"
+        "SERVER=localhost\SQLEXPRESS;"
+        "DATABASE=MarineAi;"
         "Trusted_Connection=yes;"
     )
     return conn
