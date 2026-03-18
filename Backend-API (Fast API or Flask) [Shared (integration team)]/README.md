@@ -15,5 +15,3 @@ An AI-powered maritime analytics platform that integrates **Machine Learning, Ex
 - 🗄️ SQL Server database integration
 
 ---
-
-## 🏗️ System Architecture
