@@ -296,6 +296,18 @@ def step2_train_models(df):
             acc = metrics.get('accuracy_pct', 0)
             log.info("Trained '%s' - R2=%.4f, Acc=%.1f%%" % (part_name, r2, acc))
             print("[OK] Trained: %s (R2=%.4f, Acc=%.1f%%)" % (part_name, r2, acc))
+                 # ── LSTM training ──────────────────────────────
+            try:
+                from lstm_predictor import ShipPartLSTMPredictor
+                print("[....] Training LSTM: " + part_name)
+                lstm = ShipPartLSTMPredictor(part_name=part_name, window_size=30)
+                lstm_metrics = lstm.train(part_df, epochs=50)
+                lstm.save("models")
+                print("[OK] LSTM trained: %s (R2=%.4f)" % (part_name, lstm_metrics['r2_score']))
+                print("     RF   R²: %.4f" % r2)
+                print("     LSTM R²: %.4f" % lstm_metrics['r2_score'])
+            except Exception as e:
+                print("[WARN] LSTM training failed for %s: %s" % (part_name, str(e)))
         except Exception as e:
             log.error("Training failed for '%s': %s" % (part_name, str(e)))
             print("[ERROR] Training failed for %s: %s" % (part_name, str(e)))
@@ -532,11 +544,6 @@ def main(data_path=None, simulation_hour=SIMULATION_HOUR):
         print("  [+] Detects anomalies in sensor readings")
         print("  [+] Actionable maintenance recommendations")
         print("  [+] Visual dashboard + full report")
-        print("\n  Next steps:")
-        print("  --> Connect to real MQTT sensor stream")
-        print("  --> Add LSTM model for sequence-based prediction")
-        print("  --> Build REST API with FastAPI")
-        print("  --> Connect to React.js dashboard")
         print("=" * 60 + "\n")
 
     except KeyboardInterrupt:
