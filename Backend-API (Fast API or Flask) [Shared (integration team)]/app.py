@@ -44,9 +44,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# =========================================================
-# 🚢 1. ROUTE API
-# =========================================================
+# 1. ROUTE API
 
 class RouteRequest(BaseModel):
     origin: str
