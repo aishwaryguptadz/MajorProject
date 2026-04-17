@@ -5,17 +5,6 @@ import pandas as pd
 import os
 import sys
 
-app = FastAPI()
-
-# ---------------- CORS ----------------
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 # ---------------- PATH SETUP ----------------
 current_dir = os.path.dirname(__file__)
 project_root = os.path.abspath(os.path.join(current_dir, ".."))
@@ -23,9 +12,37 @@ project_root = os.path.abspath(os.path.join(current_dir, ".."))
 ml_src = os.path.join(project_root, "ml_model", "src")
 sys.path.append(ml_src)
 
+# ---------------- IMPORT ML ----------------
 from predict import MaritimePredictor
+from feature_engineering import create_derived_features
 
+# ---------------- INIT ----------------
 predictor = MaritimePredictor()
+
+# ---------------- HELPER FUNCTION ----------------
+def prepare_features(input_dict):
+    df = pd.DataFrame([input_dict])
+
+    # Derived features
+    df = create_derived_features(df)
+
+    # Ensure all required features exist
+    for col in predictor.fuel_features:
+        if col not in df.columns:
+            df[col] = 0
+
+    return df
+
+# ---------------- FASTAPI INIT ----------------
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # =========================================================
 # 🚢 1. ROUTE API
@@ -47,15 +64,14 @@ def get_routes(data: RouteRequest):
     )
     return {"routes": routes}
 
+#  2. HEALTH API
 
-# =========================================================
-# ❤️ 2. HEALTH API (ML DIRECT)
-# =========================================================
 class HealthInput(BaseModel):
     rpm: float
     engineTemp: float
     vibration: float
     loadWeight: float
+
 
 @app.post("/prediction/health")
 def get_health(data: HealthInput):
@@ -68,10 +84,7 @@ def get_health(data: HealthInput):
             "loadWeight": data.loadWeight
         }
 
-        health_score = predictor.predict_health(input_data)
-
-        # Convert to percentage
-        health_score = float(health_score * 100)
+        health_score = float(predictor.predict_health(input_data))
 
         if health_score >= 80:
             alert = "HEALTHY"
@@ -87,10 +100,8 @@ def get_health(data: HealthInput):
 
     except Exception as e:
         return {"error": str(e)}
-        
-# =========================================================
-# 🚀 3. ROUTE → HEALTH (MAIN FLOW)
-# =========================================================
+
+# 3. VOYAGE HEALTH
 
 class RouteSelection(BaseModel):
     origin: str
@@ -119,8 +130,7 @@ def voyage_health(data: RouteSelection):
             "loadWeight": selected_route.get("load", 1000)
         }
 
-        health_score = predictor.predict_health(input_data)
-        health_score = float(health_score * 100)
+        health_score = float(predictor.predict_health(input_data))
 
         if health_score >= 80:
             alert = "HEALTHY"
@@ -138,15 +148,19 @@ def voyage_health(data: RouteSelection):
     except Exception as e:
         return {"error": str(e)}
 
+# 4. LIFETIME API
+
 @app.post("/prediction/lifetime")
 def get_lifetime(data: HealthInput):
-    input_data = data.dict()
-    lifetime = predictor.predict_lifetime(input_data)
-    return {"remaining_life_hours": lifetime}
+    try:
+        input_data = data.dict()
+        lifetime = predictor.predict_lifetime(input_data)
+        return {"remaining_life_hours": lifetime}
+    except Exception as e:
+        return {"error": str(e)}
 
-# =========================================================
-# 🤖 4. CHATBOT (AKHAND)
-# =========================================================
+
+#  5. CHATBOT API
 
 ai_path = os.path.join(
     project_root,
@@ -163,7 +177,6 @@ class Query(BaseModel):
 
 @app.post("/ask")
 def ask_question(data: Query):
-
     analysis = analyze_dataset()
     question = data.question.lower()
 
