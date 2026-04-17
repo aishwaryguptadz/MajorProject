@@ -1,4 +1,5 @@
 --CREATE DATABASE
+
 CREATE DATABASE MarineAI;
 GO
 
@@ -44,13 +45,11 @@ CREATE TABLE safety_predictions(
 	   created_at DATETIME DEFAULT GETDATE(),
 	   FOREIGN KEY (vessel_id) REFERENCES vessels(vessel_id)
 );
-
 --ALERT VARIATIONS 
 CREATE TABLE alert_types(
 	   type_id INT IDENTITY PRIMARY KEY,
 	   type_name VARCHAR(50)
 );
-
 --AVOID REPETATION
 INSERT INTO alert_types 
 VALUES ('vibrations'),
@@ -74,7 +73,6 @@ CREATE TABLE system_logs(
 	   level VARCHAR(10),
 	   time DATETIME DEFAULT GETDATE()
 );
-
 --SYSTEM STATUS
 CREATE TABLE system_status(
 	   vessel_id VARCHAR(20) PRIMARY KEY,
@@ -82,7 +80,6 @@ CREATE TABLE system_status(
 	   connectivity VARCHAR(20),
 	   FOREIGN KEY (vessel_id) REFERENCES vessels(vessel_id)
 );
-
 --CONFIGURATION SETTINGS
 CREATE TABLE settings(
 	   setting_id INT IDENTITY PRIMARY KEY,
@@ -120,10 +117,10 @@ SELECT TOP 10 * FROM fuel_predictions;
 
 DROP TABLE master_dataset;
 
+
 --ALTER TABLE vessel_metrics ADD co2_emission FLOAT;
 UPDATE vessel_metrics
 SET co2_emission = fuelRate * 3.114;
-
 --PREVENT NULL EMISSION
 ALTER TABLE vessel_metrics
 ADD CONSTRAINT df_co2 DEFAULT 0 FOR co2_emission;
