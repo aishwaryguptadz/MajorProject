@@ -50,9 +50,7 @@ from predict import MaritimePredictor
 
 predictor = MaritimePredictor()
 
-# =========================================================
-# 🚢 1. ROUTE API
-# =========================================================
+# 1. ROUTE API
 
 class RouteRequest(BaseModel):
     origin: str
@@ -71,9 +69,7 @@ def get_routes(data: RouteRequest):
     return {"routes": routes}
 
 
-# =========================================================
-# ❤️ 2. HEALTH API (ML DIRECT)
-# =========================================================
+# 2. HEALTH API (ML DIRECT)
 
 class HealthInput(BaseModel):
     rpm: float
@@ -118,9 +114,7 @@ def get_health(data: HealthInput):
      except Exception as e:
         return {"error": str(e)}
         
-# =========================================================
-# 🚀 3. ROUTE → HEALTH (MAIN FLOW)
-# =========================================================
+# 3. ROUTE → HEALTH (MAIN FLOW)
 
 class RouteSelection(BaseModel):
     origin: str
@@ -178,9 +172,7 @@ def voyage_health(data: RouteSelection):
         return {"error": str(e)}
 
 
-# =========================================================
-# 🤖 4. CHATBOT (AKHAND)
-# =========================================================
+# 4. CHATBOT (AKHAND)
 
 ai_path = os.path.join(
     project_root,
