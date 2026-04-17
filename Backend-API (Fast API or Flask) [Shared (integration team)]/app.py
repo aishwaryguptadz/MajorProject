@@ -84,10 +84,7 @@ def get_health(data: HealthInput):
             "loadWeight": data.loadWeight
         }
 
-        health_score = predictor.predict_health(input_data)
-
-        # Convert to percentage
-        health_score = float(health_score * 100)
+        health_score = float(predictor.predict_health(input_data))
 
         if health_score >= 80:
             alert = "HEALTHY"
@@ -133,8 +130,7 @@ def voyage_health(data: RouteSelection):
             "loadWeight": selected_route.get("load", 1000)
         }
 
-        health_score = predictor.predict_health(input_data)
-        health_score = float(health_score * 100)
+        health_score = float(predictor.predict_health(input_data))
 
         if health_score >= 80:
             alert = "HEALTHY"
