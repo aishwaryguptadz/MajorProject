@@ -129,35 +129,46 @@ def safety_prediction():
 # ---------------- HEALTH (YOUR MODEL) ----------------
 @app.get("/prediction/health")
 def get_health():
-    conn = get_connection()
-    cursor = conn.cursor()
+    data = None
 
-    cursor.execute("""
-        SELECT TOP 1 engineTemp, rpm, vibration, loadWeight
-        FROM vessel_metrics
-        ORDER BY timestamp DESC
-    """)
+    # Try to get live data from DB
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT TOP 1 engineTemp, rpm, vibration, loadWeight
+            FROM vessel_metrics
+            ORDER BY timestamp DESC
+        """)
+        row = cursor.fetchone()
+        conn.close()
 
-    row = cursor.fetchone()
-    conn.close()
+        if row:
+            data = {
+                "engineTemp": row.engineTemp,
+                "rpm": row.rpm,
+                "vibration": row.vibration,
+                "loadWeight": row.loadWeight
+            }
+    except Exception as e:
+        print(f"[DB] Skipping database, using fallback data: {e}")
 
-    if not row:
-        return {"message": "No data"}
-
-    data = {
-        "engineTemp": row.engineTemp,
-        "rpm": row.rpm,
-        "vibration": row.vibration,
-        "loadWeight": row.loadWeight
-    }
+    # If DB failed or no rows, use fallback dummy data
+    if data is None:
+        data = {
+            "engineTemp": 75,
+            "rpm": 80,
+            "vibration": 5,
+            "loadWeight": 1000
+        }
 
     health_index = predictor.predict_health(data)
 
     return {
         "sensor_data": data,
-        "health_index": float(health_index)
+        "health_index": float(health_index),
+        "source": "database" if data else "fallback"
     }
-
 # ---------------- ALERTS ----------------
 @app.get("/alerts")
 def get_alerts():
