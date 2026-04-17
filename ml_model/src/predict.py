@@ -84,3 +84,25 @@ class MaritimePredictor:
     def get_ports(self) -> dict:
         """Return available origin and destination ports."""
         return self.optimizer.get_available_ports()
+    
+    def predict_health(self, data):
+        temp = data["engineTemp"]
+        rpm = data["rpm"]
+        vibration = data["vibration"]
+
+        # simple logic (demo ML)
+        health = 1.0
+        if temp > 90:
+          health -= 0.3
+        if vibration > 3:
+            health -= 0.3
+        if rpm > 2000:
+            health -= 0.2
+        return max(0, health)
+    def predict_lifetime(self, data):
+
+        health = self.predict_health(data)
+        # convert health → remaining life
+        remaining_life = health * 200  # hours
+
+        return remaining_life
