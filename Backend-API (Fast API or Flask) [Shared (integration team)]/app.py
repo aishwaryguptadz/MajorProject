@@ -4,40 +4,6 @@ from pydantic import BaseModel
 import pandas as pd
 import os
 import sys
-current_dir = os.path.dirname(__file__)
-project_root = os.path.abspath(os.path.join(current_dir, ".."))
-
-ml_src = os.path.join(project_root, "ml_model", "src") 
-sys.path.append(ml_src)
-
-from predict import MaritimePredictor
-from feature_engineering import create_derived_features
-
-def prepare_features(input_dict):
-    import pandas as pd
-
-    df = pd.DataFrame([input_dict])
-
-    # Add derived features
-    df = create_derived_features(df)
-
-    # 🔥 Ensure ALL required columns exist
-    for col in predictor.fuel_features:
-        if col not in df.columns:
-            df[col] = 0   # default value
-
-    return df
-
-app = FastAPI()
-
-# ---------------- CORS ----------------
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 # ---------------- PATH SETUP ----------------
 current_dir = os.path.dirname(__file__)
@@ -46,11 +12,41 @@ project_root = os.path.abspath(os.path.join(current_dir, ".."))
 ml_src = os.path.join(project_root, "ml_model", "src")
 sys.path.append(ml_src)
 
+# ---------------- IMPORT ML ----------------
 from predict import MaritimePredictor
+from feature_engineering import create_derived_features
 
+# ---------------- INIT ----------------
 predictor = MaritimePredictor()
 
-# 1. ROUTE API
+# ---------------- HELPER FUNCTION ----------------
+def prepare_features(input_dict):
+    df = pd.DataFrame([input_dict])
+
+    # Derived features
+    df = create_derived_features(df)
+
+    # Ensure all required features exist
+    for col in predictor.fuel_features:
+        if col not in df.columns:
+            df[col] = 0
+
+    return df
+
+# ---------------- FASTAPI INIT ----------------
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# =========================================================
+# 🚢 1. ROUTE API
+# =========================================================
 
 class RouteRequest(BaseModel):
     origin: str
@@ -68,8 +64,7 @@ def get_routes(data: RouteRequest):
     )
     return {"routes": routes}
 
-
-# 2. HEALTH API (ML DIRECT)
+#  2. HEALTH API
 
 class HealthInput(BaseModel):
     rpm: float
@@ -81,24 +76,19 @@ class HealthInput(BaseModel):
 @app.post("/prediction/health")
 def get_health(data: HealthInput):
 
-     try:
-        # 1. Convert to DataFrame
-        df = prepare_features({
-        "rpm": data.rpm,
-        "engineTemp": data.engineTemp,
-        "vibration": data.vibration,
-        "loadWeight": data.loadWeight,
-        "design_speed_knots": 15,
-        "wind_speed": 10,
-        "wave_height": 1.5,
-        "sea_state": 3
-        })
-        # 2. Predict using existing model
-        prediction = predictor.predict_fuel(df)
+    try:
+        input_data = {
+            "rpm": data.rpm,
+            "engineTemp": data.engineTemp,
+            "vibration": data.vibration,
+            "loadWeight": data.loadWeight
+        }
 
-        health_score = float(prediction[0])
+        health_score = predictor.predict_health(input_data)
 
-        # 3. Alert logic
+        # Convert to percentage
+        health_score = float(health_score * 100)
+
         if health_score >= 80:
             alert = "HEALTHY"
         elif health_score >= 50:
@@ -111,10 +101,10 @@ def get_health(data: HealthInput):
             "alert_level": alert
         }
 
-     except Exception as e:
+    except Exception as e:
         return {"error": str(e)}
-        
-# 3. ROUTE → HEALTH (MAIN FLOW)
+
+# 3. VOYAGE HEALTH
 
 class RouteSelection(BaseModel):
     origin: str
@@ -136,25 +126,16 @@ def voyage_health(data: RouteSelection):
 
         selected_route = routes[data.route_index]
 
-        # 1. Build DataFrame
-        df = prepare_features({
-        "rpm": selected_route.get("rpm", 80),
-        "engineTemp": selected_route.get("engine_temp", 75),
-        "vibration": selected_route.get("vibration", 5),
-        "loadWeight": selected_route.get("load", 1000),
-        "design_speed_knots": 15,
-        "wind_speed": 10,
-        "wave_height": 1.5,
-        "sea_state": 3
-        })
-        # 2. Derived features
-        print("EXPECTED:", predictor.fuel_features)
-        print("GOT:", df.columns)
-        prediction = predictor.predict_fuel(df)
+        input_data = {
+            "rpm": selected_route.get("rpm", 80),
+            "engineTemp": selected_route.get("engine_temp", 75),
+            "vibration": selected_route.get("vibration", 2),
+            "loadWeight": selected_route.get("load", 1000)
+        }
 
-        health_score = float(prediction[0])
+        health_score = predictor.predict_health(input_data)
+        health_score = float(health_score * 100)
 
-        # 4. Alert
         if health_score >= 80:
             alert = "HEALTHY"
         elif health_score >= 50:
@@ -171,8 +152,19 @@ def voyage_health(data: RouteSelection):
     except Exception as e:
         return {"error": str(e)}
 
+# 4. LIFETIME API
 
-# 4. CHATBOT (AKHAND)
+@app.post("/prediction/lifetime")
+def get_lifetime(data: HealthInput):
+    try:
+        input_data = data.dict()
+        lifetime = predictor.predict_lifetime(input_data)
+        return {"remaining_life_hours": lifetime}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+#  5. CHATBOT API
 
 ai_path = os.path.join(
     project_root,
@@ -189,7 +181,6 @@ class Query(BaseModel):
 
 @app.post("/ask")
 def ask_question(data: Query):
-
     analysis = analyze_dataset()
     question = data.question.lower()
 
