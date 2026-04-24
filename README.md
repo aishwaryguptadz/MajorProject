@@ -19,7 +19,7 @@ DB_DRIVER=SQL Server
 
 4. Run API server
 
-uvicorn main:app --reload
+uvicorn app:app --reload --host 0.0.0.0 --port 8000
 
 5. Test APIs
 
