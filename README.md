@@ -24,4 +24,4 @@ uvicorn app:app --reload --host 0.0.0.0 --port 8000
 5. Test APIs
 
 Open:
-http://127.0.0.1:8000/docs
+[http://127.0.0.1:8000/docs](http://localhost:8000/docs)
