@@ -1,361 +1,585 @@
 # Marine Smart Automation System
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Domain-Marine%20Engineering-blue?style=for-the-badge" alt="Marine Engineering">
-  <img src="https://img.shields.io/badge/AI-Deep%20Learning-orange?style=for-the-badge" alt="Deep Learning">
-  <img src="https://img.shields.io/badge/Android-Kotlin-green?style=for-the-badge&logo=android" alt="Android">
-  <img src="https://img.shields.io/badge/Backend-FastAPI-009688?style=for-the-badge" alt="FastAPI">
-  <img src="https://img.shields.io/badge/Database-SQL%20Server-red?style=for-the-badge" alt="SQL Server">
-  <img src="https://img.shields.io/badge/ML-Python-yellow?style=for-the-badge&logo=python" alt="Python">
+  <strong>AI-Powered Marine Engineering & Vessel Operations Platform</strong>
 </p>
 
 <p align="center">
-  <b>AI-Powered Marine Engineering and Vessel Operations Platform</b>
+  <img src="https://img.shields.io/badge/Android-Kotlin-3DDC84?style=for-the-badge&logo=android&logoColor=white" alt="Android">
+  <img src="https://img.shields.io/badge/Backend-FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI">
+  <img src="https://img.shields.io/badge/AI-RAG%20%7C%20LangChain-FF6F00?style=for-the-badge" alt="AI">
+  <img src="https://img.shields.io/badge/ML-Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Machine Learning">
+  <img src="https://img.shields.io/badge/Database-SQL%20Server-CC2927?style=for-the-badge&logo=microsoftsqlserver&logoColor=white" alt="SQL Server">
+  <img src="https://img.shields.io/badge/API-REST-02569B?style=for-the-badge" alt="REST API">
 </p>
 
 <p align="center">
-  Leveraging deep learning, data-driven analytics, and mobile technologies
-  to improve marine engineering operations and vessel monitoring.
+  A modular marine intelligence platform combining native Android monitoring, machine learning, REST APIs, database management, RAG-based AI assistance, web dashboards, and edge deployment concepts.
 </p>
+
+---
+
+## Demo Flow
+
+```text
+Marine / Vessel Data
+        │
+        ▼
+Machine Learning Models
+        │
+        ▼
+FastAPI Backend
+        │
+   ┌────┼─────────────┐
+   │    │             │
+   ▼    ▼             ▼
+Android  Dashboard   AI Agent
+ App       Web       RAG/LangChain
+   │        │             │
+   └────────┼─────────────┘
+            ▼
+      Decision Support
+```
 
 ---
 
 ## Overview
 
-The **Marine Smart Automation System** is a multidisciplinary software platform designed to address challenges in marine engineering and improve vessel operations through data-driven intelligence.
+The **Marine Smart Automation System** is a multidisciplinary software platform designed to improve marine engineering operations and vessel monitoring through data-driven intelligence.
 
-The system combines:
+Marine vessels generate large volumes of operational data. Traditional monitoring workflows can involve manual observation, delayed identification of abnormal conditions, difficult access to historical information, and heavy dependency on domain expertise.
 
-- Machine Learning / Deep Learning
-- Marine operational datasets
-- REST APIs
-- Database management
-- Android mobile application
-- RAG-based AI assistance
-- Web-based monitoring/dashboard capabilities
-- Edge deployment concepts
+This project proposes an integrated platform that combines:
 
-The overall repository is organized as a modular system where different components can be developed and maintained independently.
+* Native Android application development
+* Machine Learning / Deep Learning
+* Marine operational datasets
+* REST APIs
+* Database management
+* RAG-based AI assistance
+* Web-based monitoring dashboards
+* Edge deployment concepts
 
----
+The repository is organized as a modular system so that the mobile application, backend, AI agent, machine-learning pipeline, dashboard, and edge components can be developed independently while communicating through defined interfaces.
 
-## Problem Statement
+### Problem Statement
 
-Marine vessels generate and depend on large amounts of operational data.
+Marine vessel operations require continuous monitoring of operational parameters and engineering information.
 
-Traditionally, vessel monitoring and engineering analysis can involve:
+Common challenges include:
 
-- Manual monitoring
-- Large volumes of sensor/operational data
-- Delayed identification of abnormal conditions
-- Difficult access to historical information
-- Dependency on experienced personnel for analysis
-- Limited accessibility of operational information
+* Manual monitoring of vessel information
+* Large volumes of operational data
+* Delayed detection of abnormal conditions
+* Difficulty accessing historical information
+* Limited decision-support capabilities
+* Dependency on experienced marine personnel
+* Lack of unified access to operational intelligence
 
-The goal of this project is to create an integrated platform that can use machine learning and intelligent software components to assist with vessel operations and marine engineering analysis.
+### Proposed Solution
 
----
-
-## Proposed Solution
-
-The system combines multiple software components into a unified architecture.
+The system introduces an integrated software architecture in which machine-learning models, backend APIs, databases, mobile applications, dashboards, and AI-assisted information retrieval work together.
 
 ```text
-                    Marine Vessel Data
-                           │
-                           ▼
-                  ┌──────────────────┐
-                  │   Data / Dataset │
-                  └────────┬─────────┘
-                           │
-                           ▼
-                  ┌──────────────────┐
-                  │ Machine Learning │
-                  │     Models       │
-                  └────────┬─────────┘
-                           │
-                           ▼
-                  ┌──────────────────┐
-                  │   Backend API    │
-                  │    FastAPI       │
-                  └────────┬─────────┘
-                           │
-              ┌────────────┼────────────┐
-              │            │            │
-              ▼            ▼            ▼
-        Android App    Web Dashboard   AI Agent
-              │            │            │
-              └────────────┼────────────┘
-                           │
-                           ▼
-                 Marine Operations
-                 & Decision Support
+┌───────────────────────────────┐
+│      Marine Vessel Data       │
+└───────────────┬───────────────┘
+                │
+                ▼
+┌───────────────────────────────┐
+│   Machine Learning Models     │
+│       Python / ML / DL        │
+└───────────────┬───────────────┘
+                │
+                ▼
+┌───────────────────────────────┐
+│       FastAPI Backend         │
+│          REST APIs            │
+└───────────────┬───────────────┘
+                │
+       ┌────────┼────────┐
+       │        │        │
+       ▼        ▼        ▼
+   Android   Dashboard   AI Agent
+     App        Web      RAG/LLM
+       │        │        │
+       └────────┼────────┘
+                │
+                ▼
+       Marine Decision Support
 ```
 
 ---
 
-## Major Features
+## Features
 
-### Android Mobile Application
+### Android Application
 
-The project contains a dedicated native Android application for interacting with the marine monitoring system.
-
-The application is located under:
-
-```text
-Mobile-App (Android app)/
-└── Marine/
-```
-
-The Android module provides a mobile interface through which marine/vessel-related information can be presented to users.
+* Native Android application built with Kotlin.
+* XML-based Android UI.
+* Vessel and marine information presentation.
+* Application navigation and screen management.
+* Backend API integration.
+* JSON-based data communication.
+* Application-side data handling.
+* Mobile interface for marine monitoring.
 
 ### Machine Learning
 
-The repository contains a dedicated machine-learning module:
+* Maritime dataset processing.
+* Machine-learning model development.
+* Model evaluation.
+* Model persistence.
+* Model inference.
+* Model compression.
+* API integration support.
+* Fuel-consumption prediction.
+* ETA prediction.
+* Route optimization.
+
+The ML module contains trained artifacts including:
 
 ```text
-ml_model/
-├── data/
-├── evaluation/
-├── models/
-├── src/
-├── API_GUIDE.md
-├── compress_model.py
-├── main.py
-└── new_maritime_dataset.csv
+fuel_model.pkl
+eta_model.pkl
+fuel_feature_cols.pkl
+eta_feature_cols.pkl
+label_encoders.pkl
+scaler.pkl
 ```
 
-The ML module contains:
+### Fuel Prediction
 
-- Dataset resources
-- Model resources
-- Source code
-- Evaluation components
-- Model compression utilities
-- API documentation
-- Maritime dataset
+The ML/API design supports prediction of voyage fuel consumption based on parameters such as:
 
-### AI Agent
+* Deadweight tonnage
+* Vessel age
+* Distance
+* Average speed
+* Design speed
+* Engine load
+* RPM
+* Shaft power
+* SFOC
+* Wind speed
+* Wave height
+* Current speed
+* Hull fouling
+* Propeller fouling
+* Cargo utilization
+* Draft
+* Ship type
+* Loading condition
+* Fuel type
 
-The project also contains an AI-agent component based around:
+### ETA Prediction
 
-- RAG
-- LangChain
-- Marine-domain information retrieval
-- Intelligent question answering
+The system can produce voyage-related ETA information alongside fuel prediction.
 
-Module:
+### Route Optimization
 
-```text
-AI-Agent (RAG + Langchain system) [Akhand]/
-└── marine_ai_intelligence_module/
-```
+The route optimization component can recommend multiple routes between ports and provide information such as:
 
-The purpose of this component is to provide an intelligent interface for interacting with marine-domain information.
+* Route ranking
+* Route path
+* Route type
+* Total fuel consumption
+* Total distance
+* Voyage duration
+* Fuel cost
+* Risk score
+* Overall score
+
+### AI / RAG Assistant
+
+* Marine-domain question answering.
+* Retrieval-Augmented Generation.
+* LangChain-based architecture.
+* Marine knowledge retrieval.
+* Context-aware response generation.
+* Intelligent interaction with marine-domain information.
 
 ### Backend API
 
-The repository contains a backend integration module based on FastAPI.
+* FastAPI-based REST backend.
+* Request validation.
+* Database communication.
+* ML service integration.
+* JSON responses.
+* Interactive Swagger/OpenAPI documentation.
+* Centralized integration layer for application clients.
 
-The backend provides an API layer between the application clients, machine-learning components, and database.
+### Database Management
 
-The documented setup uses:
+* Relational database architecture.
+* SQL Server integration.
+* Marine-domain data storage.
+* Structured querying.
+* Data retrieval for backend services.
+* Database relationships and consistency management.
 
-- FastAPI
-- Uvicorn
-- SQL Server
-- Python
+### Dashboard
 
-The backend can be started using:
+The repository contains a dedicated React-based web dashboard module intended for monitoring and visualizing marine information.
+
+### Edge Deployment
+
+The repository also contains an edge-module intended for lightweight model deployment and optimization for resource-constrained environments.
+
+---
+
+## Tech Stack
+
+### Mobile Application
+
+| Technology     | Purpose                         |
+| -------------- | ------------------------------- |
+| Kotlin         | Android application development |
+| Android SDK    | Native Android platform         |
+| XML            | UI layouts                      |
+| Gradle         | Build and dependency management |
+| Android Studio | Android development environment |
+
+### Backend
+
+| Technology | Purpose                     |
+| ---------- | --------------------------- |
+| Python     | Backend and ML development  |
+| FastAPI    | REST API framework          |
+| Uvicorn    | ASGI server                 |
+| REST API   | Client-server communication |
+
+### Database
+
+| Technology           | Purpose                        |
+| -------------------- | ------------------------------ |
+| Microsoft SQL Server | Relational database            |
+| SQL                  | Data querying and management   |
+| DBMS                 | Database design and management |
+
+### Machine Learning
+
+| Technology       | Purpose                   |
+| ---------------- | ------------------------- |
+| Python           | ML development            |
+| Pandas           | Dataset processing        |
+| NumPy            | Numerical computation     |
+| Scikit-learn     | ML preprocessing/models   |
+| XGBoost          | Fuel prediction           |
+| Random Forest    | ETA prediction            |
+| Joblib           | Model serialization       |
+| Maritime Dataset | Model training/evaluation |
+
+### AI
+
+| Technology            | Purpose                              |
+| --------------------- | ------------------------------------ |
+| RAG                   | Retrieval-Augmented Generation       |
+| LangChain             | AI/RAG orchestration                 |
+| Information Retrieval | Marine knowledge retrieval           |
+| AI Agent              | Intelligent marine-domain assistance |
+
+### Web / Other
+
+| Technology       | Purpose                |
+| ---------------- | ---------------------- |
+| React            | Web dashboard          |
+| Git              | Version control        |
+| GitHub           | Source-code management |
+| VS Code          | Development            |
+| SQL Server Tools | Database management    |
+
+---
+
+## Architecture
+
+The project follows a **modular client-server architecture**.
+
+Each major subsystem has a dedicated responsibility:
+
+```text
+                         ┌──────────────────────┐
+                         │    Marine Dataset    │
+                         └──────────┬───────────┘
+                                    │
+                                    ▼
+                         ┌──────────────────────┐
+                         │   ML / DL Pipeline   │
+                         │       Python         │
+                         └──────────┬───────────┘
+                                    │
+                                    ▼
+                         ┌──────────────────────┐
+                         │      FastAPI         │
+                         │    Backend API       │
+                         └──────────┬───────────┘
+                                    │
+              ┌─────────────────────┼─────────────────────┐
+              │                     │                     │
+              ▼                     ▼                     ▼
+      ┌──────────────┐      ┌──────────────┐      ┌──────────────┐
+      │ Android App  │      │ Web Dashboard│      │  AI / RAG    │
+      │    Kotlin    │      │    React     │      │   Agent      │
+      └──────┬───────┘      └──────┬───────┘      └──────┬───────┘
+             │                     │                     │
+             └─────────────────────┼─────────────────────┘
+                                   │
+                                   ▼
+                         ┌──────────────────────┐
+                         │     SQL Server       │
+                         │      Database        │
+                         └──────────────────────┘
+```
+
+### Android Architecture
+
+The Android application acts as a client of the backend.
+
+```text
+┌───────────────┐
+│     User      │
+└───────┬───────┘
+        │
+        ▼
+┌───────────────┐
+│ Android UI    │
+│ Kotlin + XML  │
+└───────┬───────┘
+        │
+        ▼
+┌───────────────┐
+│ Application   │
+│ Logic         │
+└───────┬───────┘
+        │
+        │ HTTP / REST
+        ▼
+┌───────────────┐
+│   FastAPI     │
+│    Backend    │
+└───────┬───────┘
+        │
+   ┌────┴───────────┐
+   │                │
+   ▼                ▼
+Database          ML / AI
+   │                │
+   └───────┬────────┘
+           ▼
+     JSON Response
+           │
+           ▼
+     Android UI
+```
+
+The Android client does not require direct access to the database. Database operations remain behind the backend API.
+
+### ML Architecture
+
+```text
+Maritime Dataset
+       │
+       ▼
+Data Preprocessing
+       │
+       ▼
+Feature Engineering
+       │
+       ├───────────────┐
+       ▼               ▼
+Fuel Model         ETA Model
+(XGBoost)       (Random Forest)
+       │               │
+       └───────┬───────┘
+               ▼
+         Model Inference
+               │
+               ▼
+          Backend API
+```
+
+### RAG Architecture
+
+```text
+User Question
+      │
+      ▼
+   AI Agent
+      │
+      ▼
+ Information Retrieval
+      │
+      ▼
+Marine Knowledge / Documents
+      │
+      ▼
+ Retrieved Context
+      │
+      ▼
+ Language Model
+      │
+      ▼
+Generated Response
+```
+
+---
+
+## Screenshots
+
+The repository currently does not expose a dedicated screenshot gallery, so screenshots should be added rather than represented with fabricated images.
+
+Recommended structure:
+
+```text
+Docs/
+└── screenshots/
+    ├── android-home.png
+    ├── vessel-monitoring.png
+    ├── vessel-details.png
+    ├── ai-assistant.png
+    ├── dashboard.png
+    └── route-optimization.png
+```
+
+Then use:
+
+```markdown
+### Android Application
+
+![Android Application](Docs/screenshots/android-home.png)
+
+### Vessel Monitoring
+
+![Vessel Monitoring](Docs/screenshots/vessel-monitoring.png)
+
+### AI Assistant
+
+![AI Assistant](Docs/screenshots/ai-assistant.png)
+
+### Web Dashboard
+
+![Web Dashboard](Docs/screenshots/dashboard.png)
+
+### Route Optimization
+
+![Route Optimization](Docs/screenshots/route-optimization.png)
+```
+
+---
+
+## API / Database
+
+### Backend API
+
+The backend is implemented using **FastAPI** and serves as the integration layer between the Android application, machine-learning components, and database.
+
+The development server can be started with:
 
 ```bash
 uvicorn app:app --reload --host 0.0.0.0 --port 8000
 ```
 
-The FastAPI interactive documentation is available at:
+FastAPI's interactive documentation is then available at:
 
 ```text
 http://localhost:8000/docs
 ```
 
+### Machine Learning API
+
+#### Fuel Prediction
+
+```http
+POST /api/predict/fuel
+```
+
+Example request:
+
+```json
+{
+  "dwt": 287185,
+  "vessel_age": 21,
+  "distance_nm": 8278,
+  "avg_speed_knots": 12.0,
+  "design_speed_knots": 16.0,
+  "engine_load_pct": 42.6,
+  "rpm": 91,
+  "shaft_power_kw": 5743.3,
+  "sfoc_g_kwh": 186.7,
+  "wind_speed_knots": 1.8,
+  "wave_height_m": 2.16,
+  "current_speed_knots": 2.3,
+  "hull_fouling_pct": 15.6,
+  "propeller_fouling_pct": 14.1,
+  "cargo_utilization_pct": 0.833,
+  "draft_m": 13.68,
+  "ship_type": "Tanker",
+  "loading_condition": "Laden",
+  "fuel_type": "VLSFO"
+}
+```
+
+Example response:
+
+```json
+{
+  "predicted_fuel_tonnes": 739.6,
+  "predicted_eta_hours": 689.8
+}
+```
+
+#### Route Optimization
+
+```http
+POST /api/routes/optimize
+```
+
+Example request:
+
+```json
+{
+  "origin": "Jebel Ali",
+  "destination": "Guangzhou",
+  "ship_type": "Tanker"
+}
+```
+
+The route optimizer can return ranked route recommendations containing:
+
+```text
+Rank
+Labels
+Path
+Route Type
+Total Fuel
+Total Distance
+Voyage Days
+Fuel Cost
+Risk Score
+Overall Score
+```
+
+#### Available Ports
+
+```http
+GET /api/ports
+```
+
+Returns available origin and destination ports from the maritime dataset.
+
 ### Database
 
-The backend is configured to work with a SQL Server database.
-
-Example configuration:
+The backend uses **Microsoft SQL Server** with the database configuration represented by:
 
 ```env
-DB_SERVER=YOUR_SERVER
+DB_SERVER=YOUR_SQL_SERVER
 DB_NAME=MarineAI
 DB_DRIVER=SQL Server
 ```
 
-The database layer is responsible for persistent storage and retrieval of marine-related application data.
+The Android application does not directly connect to SQL Server.
 
----
-
-## System Architecture
-
-The overall architecture can be represented as:
-
-```text
-                         ┌───────────────────────┐
-                         │   Marine Data /       │
-                         │   Operational Data    │
-                         └───────────┬───────────┘
-                                     │
-                                     ▼
-                         ┌───────────────────────┐
-                         │    ML / DL Models     │
-                         │       Python          │
-                         └───────────┬───────────┘
-                                     │
-                                     ▼
-                         ┌───────────────────────┐
-                         │      FastAPI          │
-                         │     Backend API       │
-                         └───────────┬───────────┘
-                                     │
-                  ┌──────────────────┼──────────────────┐
-                  │                  │                  │
-                  ▼                  ▼                  ▼
-          ┌──────────────┐   ┌──────────────┐   ┌──────────────┐
-          │   Android    │   │ Web Dashboard│   │  AI / RAG    │
-          │     App      │   │   Frontend   │   │    Agent     │
-          └──────────────┘   └──────────────┘   └──────────────┘
-                  │                  │                  │
-                  └──────────────────┼──────────────────┘
-                                     │
-                                     ▼
-                           ┌──────────────────┐
-                           │    SQL Server    │
-                           │    Database      │
-                           └──────────────────┘
-```
-
----
-
-## Android Application
-
-### Technology Stack
-
-The mobile application is developed as a native Android application.
-
-### Core Technologies
-
-| **Technology** | **Purpose** |
-|---|---|
-| Kotlin | Android application development |
-| Android SDK | Native Android platform |
-| XML | UI layouts |
-| Gradle | Build and dependency management |
-| Android Studio | Development environment |
-
-### Android Module Structure
-
-```text
-Mobile-App (Android app)/
-│
-└── Marine/
-    │
-    ├── app/
-    │
-    ├── gradle/
-    │
-    ├── .gitignore
-    ├── build.gradle.kts
-    ├── gradle.properties
-    ├── gradlew
-    ├── gradlew.bat
-    └── settings.gradle.kts
-```
-
----
-
-## Android Application Architecture
-
-The Android application acts as a client of the backend system.
-
-The basic communication flow is:
-
-```text
-User
- │
- ▼
-Android UI
- │
- ▼
-Application Logic
- │
- ▼
-HTTP Request
- │
- ▼
-FastAPI Backend
- │
- ▼
-Database / ML Services
- │
- ▼
-JSON Response
- │
- ▼
-Android Application
- │
- ▼
-UI Update
-```
-
-The Android client does not need direct access to the database.
-
-Instead, the backend exposes controlled APIs.
-
-This provides a cleaner separation:
-
-```text
-Android
-   │
-   │ REST API
-   ▼
-Backend
-   │
-   ├── Database
-   │
-   └── ML / AI Services
-```
-
----
-
-## Database Management
-
-Database management was one of the important parts of the project.
-
-The database layer is responsible for:
-
-- Persistent storage
-- Structured marine-related data
-- Querying operational information
-- Supporting backend API operations
-- Maintaining relationships between stored entities
-- Providing data to application-level services
-
-The backend configuration uses:
-
-```text
-Database Server
-      │
-      ▼
-SQL Server
-      │
-      ▼
-MarineAI Database
-```
-
----
-
-## Database Request Flow
-
-A typical database request follows:
+The intended request flow is:
 
 ```text
 Android Application
@@ -367,400 +591,37 @@ Android Application
      FastAPI
         │
         ▼
- Database Query
+   SQL Query
         │
         ▼
-    SQL Server
+   SQL Server
         │
         ▼
- Query Result
+   Query Result
         │
         ▼
-   FastAPI Response
+ FastAPI Response
         │
         ▼
-    JSON Response
+   JSON Response
         │
         ▼
  Android Application
 ```
 
-This architecture avoids exposing database credentials or direct database connectivity to the Android client.
+### Database Responsibilities
+
+* Persistent marine-domain data storage
+* Structured data management
+* SQL querying
+* Data retrieval
+* Entity relationships
+* Backend data operations
+* Data consistency
 
 ---
 
-## Machine Learning Module
-
-The repository contains a dedicated:
-
-```text
-ml_model/
-```
-
-directory.
-
-Its structure includes:
-
-```text
-ml_model/
-│
-├── data/
-│
-├── evaluation/
-│
-├── models/
-│
-├── src/
-│
-├── API_GUIDE.md
-│
-├── compress_model.py
-│
-├── main.py
-│
-└── new_maritime_dataset.csv
-```
-
-### Responsibilities
-
-The ML module provides a dedicated environment for:
-
-- Dataset processing
-- Model development
-- Model evaluation
-- Model storage
-- Model execution
-- Model compression
-- API integration
-
----
-
-## Dataset
-
-The repository includes a maritime dataset:
-
-```text
-new_maritime_dataset.csv
-```
-
-The dataset is used as part of the machine-learning workflow for the marine intelligence component.
-
-The exact preprocessing and modeling pipeline can evolve independently from the Android application.
-
----
-
-## AI / RAG Module
-
-The project contains:
-
-```text
-AI-Agent (RAG + Langchain system) [Akhand]/
-```
-
-with
-
-```text
-marine_ai_intelligence_module/
-```
-
-The AI component is intended to provide marine-domain intelligence using Retrieval-Augmented Generation concepts.
-
-### High-Level Flow
-
-```text
-User Question
-      │
-      ▼
-AI Agent
-      │
-      ▼
-Retrieval
-      │
-      ▼
-Marine Knowledge / Documents
-      │
-      ▼
-Context
-      │
-      ▼
-Language Model
-      │
-      ▼
-Generated Response
-```
-
----
-
-## Backend API
-
-The backend module acts as the integration layer.
-
-### Technology
-
-- Python
-- FastAPI
-- Uvicorn
-- SQL Server
-- REST APIs
-
-### API Responsibilities
-
-- Accept client requests
-- Validate request data
-- Communicate with database
-- Interface with ML services
-- Return structured JSON responses
-- Provide API endpoints to application clients
-
----
-
-## Backend Setup
-
-### 1. Clone Repository
-
-```bash
-git clone https://github.com/aishwaryguptadz/MajorProject.git
-```
-
-Move into the backend directory:
-
-```bash
-cd MajorProject/Backend-API
-```
-
-### 2. Install Dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### 3. Configure Database
-
-Create a `.env` file.
-
-Example:
-
-```env
-DB_SERVER=YOUR_SQL_SERVER
-DB_NAME=MarineAI
-DB_DRIVER=SQL Server
-```
-
-Replace the server configuration with the SQL Server instance being used in your environment.
-
-### 4. Start the API
-
-```bash
-uvicorn app:app --reload --host 0.0.0.0 --port 8000
-```
-
-### 5. Open API Documentation
-
-FastAPI automatically provides interactive API documentation.
-
-Open:
-
-```text
-http://localhost:8000/docs
-```
-
----
-
-## Android Setup
-
-### Requirements
-
-Install:
-
-- Android Studio
-- Android SDK
-- JDK compatible with the project
-- Android emulator or physical Android device
-
-### Clone the Repository
-
-```bash
-git clone https://github.com/aishwaryguptadz/MajorProject.git
-```
-
-Navigate to:
-
-```text
-MajorProject/
-└── Mobile-App (Android app)/
-    └── Marine/
-```
-
-Open the `Marine` project in Android Studio.
-
-### Build the Application
-
-Allow Android Studio to:
-
-- Index the project.
-- Download Gradle dependencies.
-- Sync the project.
-- Build the application.
-
-Then connect an Android device or start an emulator.
-
-Run:
-
-```text
-Run → Run 'app'
-```
-
----
-
-## Component Communication
-
-The different modules can be viewed as independent services/components:
-
-```text
-                         ┌──────────────┐
-                         │  ML Models   │
-                         └──────┬───────┘
-                                │
-                                ▼
-┌──────────────┐       ┌────────────────┐
-│ Android App  │──────►│  FastAPI API   │
-└──────────────┘       └───────┬────────┘
-                               │
-              ┌────────────────┼────────────────┐
-              │                │                │
-              ▼                ▼                ▼
-        ┌──────────┐    ┌─────────────┐   ┌──────────┐
-        │ SQL      │    │ ML Services │   │ AI/RAG   │
-        │ Server   │    │             │   │ Agent    │
-        └──────────┘    └─────────────┘   └──────────┘
-```
-
----
-
-## My Contribution
-
-### Android Application & Database Management
-
-My primary contribution to this project was focused on the Android application and database/DBMS-related work.
-
-#### Android Development
-
-I worked on:
-
-- Native Android application development.
-- Android UI implementation.
-- Application screens and navigation.
-- Connecting the Android application with backend services.
-- Consuming API responses.
-- Displaying backend data on the mobile application.
-- Handling application-side data flow.
-- Testing Android functionality.
-- Testing Android functionality.
-
-#### Database / DBMS
-
-I also worked on the database side of the project, including:
-
-- Understanding the database schema.
-- Structuring application-related data.
-- Writing SQL queries.
-- Retrieving data required by application features.
-- Working with relational database concepts.
-- Connecting backend functionality with stored data.
-- Maintaining data consistency.
-- Understanding relationships between marine-domain entities.
-
-#### Integration
-
-A major part of the contribution was understanding the communication between:
-
-```text
-Android Application
-        │
-        ▼
-      API
-        │
-        ▼
-    Backend
-        │
-        ▼
-   Database
-```
-
-This allowed the Android application to consume data without directly accessing the database.
-
----
-
-## Team Contributions
-
-The project is organized into multiple modules corresponding to different areas of development.
-
-| **Module** | **Responsibility** |
-|---|---|
-| Mobile-App | Android application |
-| Android application | Backend-API |
-| Dashboard-Web | Dashboard-Web |
-| AI-Agent | RAG + LangChain marine intelligence |
-| ml_model | Machine-learning pipeline |
-| Data | Dataset/data resources |
-| Edge-Module | Edge deployment / lightweight model |
-| Docs | Project documentation |
-| Scripts | Utility scripts |
-
-The repository structure reflects a collaborative development approach, with different components maintained as separate modules.
-
----
-
-## Technologies Used
-
-### Mobile
-
-- Kotlin
-- Android
-- Android Studio
-- XML
-- Gradle
-
-### Backend
-
-- Python
-- FastAPI
-- Uvicorn
-- REST API
-
-### Database
-
-- Microsoft SQL Server
-- SQL
-- DBMS concepts
-
-### Machine Learning
-
-- Python
-- Deep Learning
-- Machine Learning
-- Maritime datasets
-- Model evaluation
-- Model compression
-
-### AI
-
-- RAG
-- LangChain
-- AI Agent
-- Information Retrieval
-
-### Development Tools
-
-- Git
-- GitHub
-- Android Studio
-- VS Code
-- SQL Server tools
-
----
-
-## Repository Structure
+## Project Structure
 
 ```text
 MajorProject/
@@ -781,7 +642,11 @@ MajorProject/
 ├── Mobile-App (Android app)/
 │   └── Marine/
 │       ├── app/
+│       │   └── src/
+│       │       └── main/
+│       │
 │       ├── gradle/
+│       ├── .gitignore
 │       ├── build.gradle.kts
 │       ├── gradle.properties
 │       ├── gradlew
@@ -794,7 +659,17 @@ MajorProject/
 │   ├── data/
 │   ├── evaluation/
 │   ├── models/
+│   │   ├── fuel_model.pkl
+│   │   ├── eta_model.pkl
+│   │   ├── fuel_feature_cols.pkl
+│   │   ├── eta_feature_cols.pkl
+│   │   ├── label_encoders.pkl
+│   │   └── scaler.pkl
+│   │
 │   ├── src/
+│   │   ├── predict.py
+│   │   └── route_optimizer.py
+│   │
 │   ├── API_GUIDE.md
 │   ├── compress_model.py
 │   ├── main.py
@@ -804,127 +679,290 @@ MajorProject/
 └── README.md
 ```
 
+### Module Responsibilities
+
+| Module          | Responsibility                                          |
+| --------------- | ------------------------------------------------------- |
+| `Mobile-App`    | Native Android application                              |
+| `Backend-API`   | REST API and integration layer                          |
+| `Dashboard-Web` | React-based monitoring dashboard                        |
+| `AI-Agent`      | RAG + LangChain marine intelligence                     |
+| `ml_model`      | ML models, training resources, evaluation and inference |
+| `Data`          | Dataset/data resources                                  |
+| `Edge-Module`   | Lightweight/edge deployment                             |
+| `Docs`          | Project documentation                                   |
+| `Scripts`       | Utility scripts                                         |
+
 ---
 
-## Security Considerations
+## Setup
 
-Database credentials and other sensitive configuration values should not be committed to source control.
+### Prerequisites
 
-Use environment variables:
+Install:
+
+* Android Studio
+* Android SDK
+* JDK compatible with the Android project
+* Python 3.x
+* Git
+* Microsoft SQL Server
+* SQL Server tools
+* Android emulator or physical Android device
+
+---
+
+### 1. Clone the Repository
+
+```bash
+git clone <REPOSITORY_URL>
+cd MajorProject
+```
+
+---
+
+### 2. Backend Setup
+
+Navigate to the backend:
+
+```bash
+cd "Backend-API (Fast API or Flask) [Shared (integration team)]"
+```
+
+Create a Python environment:
+
+```bash
+python -m venv venv
+```
+
+Activate it on Windows:
+
+```bash
+venv\Scripts\activate
+```
+
+Activate it on Linux/macOS:
+
+```bash
+source venv/bin/activate
+```
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+### 3. Configure Database
+
+Create a `.env` file in the backend module:
 
 ```env
-DB_SERVER=YOUR_SERVER
+DB_SERVER=YOUR_SQL_SERVER
 DB_NAME=MarineAI
 DB_DRIVER=SQL Server
 ```
 
-The Android application should communicate with the backend through authenticated and secured APIs rather than connecting directly to the database.
-
-For production deployment, additional security measures should include:
-
-- HTTPS
-- Authentication
-- Authorization
-- Secure API tokens
-- Input validation
-- SQL injection prevention
-- Secure credential management
-- Proper server configuration
-- Database access control
+Do not commit database credentials or other sensitive configuration values.
 
 ---
 
-## Testing
+### 4. Start the Backend
 
-The project can be tested at multiple levels.
+```bash
+uvicorn app:app --reload --host 0.0.0.0 --port 8000
+```
 
-### Android Testing
+Open the API documentation:
 
-Test:
+```text
+http://localhost:8000/docs
+```
 
-- Application startup
-- Screen navigation
-- API communication
-- Data rendering
-- UI interactions
-- Error states
+---
 
-### Backend Testing
+### 5. Android Setup
 
-Test:
+Navigate to:
 
-- API endpoints
-- Request validation
-- Database connectivity
-- Response formats
-- Error handling
+```text
+Mobile-App (Android app)/
+└── Marine/
+```
 
-### Database Testing
+Open the `Marine` directory in Android Studio.
 
-Test:
+Allow Android Studio to:
 
-- SQL queries
-- Data insertion
-- Data retrieval
-- Data relationships
-- Constraints
-- Data consistency
+* Index the project.
+* Download Gradle dependencies.
+* Synchronize the Gradle project.
+* Build the application.
 
-### ML Testing
+Connect an Android device or start an emulator.
 
-Test:
+Then run:
 
-- Dataset processing
-- Model performance
-- Evaluation metrics
-- Model inference
-- Model compression
+```text
+Run → Run 'app'
+```
+
+---
+
+### 6. Machine Learning Setup
+
+Navigate to:
+
+```bash
+cd ml_model
+```
+
+Install the ML dependencies:
+
+```bash
+pip install pandas numpy scikit-learn xgboost joblib
+```
+
+The repository contains trained model artifacts and supporting preprocessing files.
+
+The ML API integration guide is available in:
+
+```text
+ml_model/API_GUIDE.md
+```
+
+---
+
+## My Role
+
+### Android Application Development
+
+My primary responsibility in this project was **Native Android Application Development**.
+
+I worked on:
+
+* Native Android application development using Kotlin.
+* Android UI implementation using XML.
+* Application screens and navigation.
+* Android-side application logic.
+* Connecting the Android application with backend services.
+* Consuming REST API responses.
+* Displaying backend data inside the Android application.
+* Handling application-side data flow.
+* Testing Android functionality.
+* Understanding the complete Android → API → Backend → Database communication flow.
+
+### Database / DBMS
+
+I also contributed to the **database and DBMS side** of the project.
+
+My responsibilities included:
+
+* Understanding the database schema.
+* Structuring application-related data.
+* Writing SQL queries.
+* Retrieving data required by application features.
+* Working with relational database concepts.
+* Understanding relationships between marine-domain entities.
+* Connecting backend functionality with stored data.
+* Maintaining data consistency.
+* Understanding how application requests map to database operations.
+
+### Integration
+
+A key part of my contribution was working with the integration between:
+
+```text
+┌──────────────────────┐
+│   Android App        │
+│      Kotlin          │
+└──────────┬───────────┘
+           │
+           │ REST API
+           ▼
+┌──────────────────────┐
+│    FastAPI Backend   │
+└──────────┬───────────┘
+           │
+           │ SQL Queries
+           ▼
+┌──────────────────────┐
+│     SQL Server       │
+│      MarineAI        │
+└──────────────────────┘
+```
+
+This architecture allowed the Android application to consume backend data without requiring direct database access.
 
 ---
 
 ## Future Improvements
 
-Potential future improvements include:
+### Android Application
 
-- [ ] Real-time vessel telemetry
-- [ ] Live sensor data integration
-- [ ] Push notifications for abnormal conditions
-- [ ] Push notifications for abnormal conditions
-- [ ] Improved ML model accuracy
-- [ ] Real-time anomaly detection
-- [ ] Offline Android support
-- [ ] Local database caching
-- [ ] Improved authentication
-- [ ] Role-based access control
-- [ ] Advanced dashboard analytics
-- [ ] Model optimization for edge devices
-- [ ] Automated CI/CD
-- [ ] Comprehensive unit testing
-- [ ] Automated API testing
-- [ ] Production deployment
+* [ ] Add real-time vessel telemetry.
+* [ ] Integrate live sensor data.
+* [ ] Add real-time monitoring dashboards.
+* [ ] Add push notifications for abnormal vessel conditions.
+* [ ] Add offline support.
+* [ ] Add local database caching.
+* [ ] Improve application authentication.
+* [ ] Add role-based access control.
+* [ ] Improve UI responsiveness and accessibility.
 
----
+### Backend
 
-## Learning Outcomes
+* [ ] Add production-grade authentication.
+* [ ] Add authorization and role management.
+* [ ] Add API rate limiting.
+* [ ] Improve API validation.
+* [ ] Add comprehensive API testing.
+* [ ] Add centralized error handling.
+* [ ] Deploy the backend to production infrastructure.
+* [ ] Add automated CI/CD.
 
-This project provided practical experience in:
+### Machine Learning
 
-- Native Android development
-- Kotlin programming
-- Android UI development
-- REST API integration
-- Client-server architecture
-- Database management
-- SQL
-- Relational database design
-- Backend integration
-- Machine-learning systems
-- AI-assisted applications
-- RAG architecture
-- LangChain
-- Git and GitHub
-- Team-based software development
-- Modular project architecture
+* [ ] Improve fuel prediction accuracy.
+* [ ] Improve ETA prediction.
+* [ ] Add real-time anomaly detection.
+* [ ] Expand maritime datasets.
+* [ ] Perform continuous model evaluation.
+* [ ] Improve feature engineering.
+* [ ] Optimize models for inference.
+* [ ] Deploy optimized models to edge devices.
+
+### AI / RAG
+
+* [ ] Expand marine-domain knowledge sources.
+* [ ] Improve retrieval quality.
+* [ ] Add conversational memory.
+* [ ] Add source citations to generated responses.
+* [ ] Improve hallucination control.
+* [ ] Integrate the AI agent directly with vessel operational data.
+* [ ] Add domain-specific evaluation.
+
+### Dashboard
+
+* [ ] Add real-time telemetry visualization.
+* [ ] Add vessel analytics.
+* [ ] Add historical trend analysis.
+* [ ] Add route visualization.
+* [ ] Add fuel and ETA analytics.
+* [ ] Add anomaly monitoring.
+* [ ] Add role-specific dashboards.
+
+### Infrastructure
+
+* [ ] Containerize backend services.
+* [ ] Add automated deployment.
+* [ ] Add monitoring and logging.
+* [ ] Add centralized configuration management.
+* [ ] Implement HTTPS everywhere.
+* [ ] Improve secrets management.
+* [ ] Add comprehensive integration testing.
 
 ---
 
@@ -934,4 +972,14 @@ No explicit open-source license is currently specified for this repository.
 
 ---
 
-<p align="center"> <b>Marine Smart Automation</b> </p> <p align="center"> AI • Android • Backend • Database • Machine Learning • RAG </p>
+<p align="center">
+  <strong>Marine Smart Automation System</strong>
+</p>
+
+<p align="center">
+  AI • Android • Backend • Database • Machine Learning • RAG
+</p>
+
+<p align="center">
+  Built as a collaborative engineering project for intelligent marine vessel operations.
+</p>
