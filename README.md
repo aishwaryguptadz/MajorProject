@@ -424,49 +424,6 @@ Generated Response
 
 ---
 
-## Screenshots
-
-The repository currently does not expose a dedicated screenshot gallery, so screenshots should be added rather than represented with fabricated images.
-
-Recommended structure:
-
-```text
-Docs/
-└── screenshots/
-    ├── android-home.png
-    ├── vessel-monitoring.png
-    ├── vessel-details.png
-    ├── ai-assistant.png
-    ├── dashboard.png
-    └── route-optimization.png
-```
-
-Then use:
-
-```markdown
-### Android Application
-
-![Android Application](Docs/screenshots/android-home.png)
-
-### Vessel Monitoring
-
-![Vessel Monitoring](Docs/screenshots/vessel-monitoring.png)
-
-### AI Assistant
-
-![AI Assistant](Docs/screenshots/ai-assistant.png)
-
-### Web Dashboard
-
-![Web Dashboard](Docs/screenshots/dashboard.png)
-
-### Route Optimization
-
-![Route Optimization](Docs/screenshots/route-optimization.png)
-```
-
----
-
 ## API / Database
 
 ### Backend API
